@@ -1,0 +1,22 @@
+{
+  "groups": [
+    {
+      "name": "file",
+      "type": "org.cplego.foodie.resouce.Fileupload",
+      "sourceType": "org.cplego.foodie.resouce.Fileupload"
+    }
+  ],
+  "properties": [
+    {
+      "name": "file.img-upload-loaction",
+      "type": "java.lang.String",
+      "sourceType": "org.cplego.foodie.resouce.Fileupload"
+    },
+    {
+      "name": "file.pro-path",
+      "type": "java.lang.String",
+      "sourceType": "org.cplego.foodie.resouce.Fileupload"
+    }
+  ],
+  "hints": []
+}

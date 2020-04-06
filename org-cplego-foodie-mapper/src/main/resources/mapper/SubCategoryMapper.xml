@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.cplego.foodie.mapper.CategoryMapperCustom" >
+  <resultMap id="BaseResultMap" type="org.cplego.foodie.pojo.vo.CategoryVO" >
+    <id column="id" property="id"/>
+    <result column="name" property="name"/>
+    <result column="type" property="type"/>
+    <result column="father_id" property="fatherId"/>
+    <collection property="subCatList" ofType="org.cplego.foodie.pojo.vo.SubCategoryVO" javaType="java.util.List">
+      <id column="subId" property="subId"/>
+      <result column="subName" property="subName"/>
+      <result column="subType" property="subType"/>
+      <result column="subFatherId" property="subFatherId"/>
+    </collection>
+  </resultMap>
+
+  <select id="querySubCategoryList" resultMap="BaseResultMap"  parameterType="int" >
+        SELECT
+        f.id as id,
+        f.name as name,
+        f.type as type,
+        f.father_id as fatherId,
+        c.id as subId,
+        c.name as subName,
+        c.type as subType,
+        c.father_id as subFatherId
+    FROM
+        category f
+        LEFT JOIN
+        category c
+        ON
+        f.id = c.father_id
+        WHERE
+        f.father_id=#{rootCatId}
+  </select>
+
+    <resultMap id="myNewItemsVO" type="org.cplego.foodie.pojo.vo.NewItemsVO" >
+        <id column="rootCatId" property="rootCatId"/>
+        <result column="rootCatName" property="rootCatName"/>
+        <result column="catImage" property="catImage"/>
+        <result column="bgColor" property="bgColor"/>
+        <collection property="simpleItemList" ofType="org.cplego.foodie.pojo.vo.SimpleItemVO" javaType="java.util.List">
+            <id column="itemId" property="itemId"/>
+            <result column="itemName" property="itemName"/>
+            <result column="itemUrl" property="itemUrl"/>
+        </collection>
+    </resultMap>
+
+    <select id="getSixNewItemsLazy"  resultMap="myNewItemsVO"  parameterType="Map" >
+            SELECT
+            f.id as rootCatId,
+            f.`name` AS	rootCatName,
+            f.slogan AS slogan,
+            f.cat_image AS catImage,
+            f.bg_color AS bgColor,
+            i.id AS	itemId,
+            i.item_name as itemName,
+            im.url AS itemUrl,
+            i.created_time AS createdTime
+            FROM
+                category f
+            LEFT JOIN
+                items i
+            ON
+                f.id = i.root_cat_id
+            LEFT JOIN
+              items_img im
+            ON
+                i.id = im.item_id
+            WHERE
+                f.type = 1
+                AND
+                i.root_cat_id = #{paramsMap.rootCatId}
+                AND
+                im.is_main = 1
+                ORDER BY
+                i.created_time
+                DESC
+                LIMIT 0,6
+    </select>
+
+</mapper>

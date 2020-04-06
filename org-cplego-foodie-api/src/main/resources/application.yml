@@ -1,0 +1,74 @@
+############################################################
+#
+# 配置数据源信息
+#
+############################################################
+spring:
+  datasource:                                           # 数据源的相关配置
+    type: com.zaxxer.hikari.HikariDataSource          # 数据源类型：HikariCP
+    driver-class-name: com.mysql.cj.jdbc.Driver          # mysql驱动 useSSL=true&characterEncoding=utf-8&serverTimezone=GMT
+#    url: jdbc:mysql://localhost:3306/foodie-shop-dev?useSSL=true&useUnicode=true&characterEncoding=UTF-8&autoReconnect=true&serverTimezone=GMT
+    username: root
+#    password:
+    hikari:
+      connection-timeout: 30000       # 等待连接池分配连接的最大时长（毫秒），超过这个时长还没可用的连接则发生SQLException， 默认:30秒
+      minimum-idle: 5                 # 最小连接数
+      maximum-pool-size: 20           # 最大连接数
+      auto-commit: true               # 自动提交
+      idle-timeout: 600000            # 连接超时的最大时长（毫秒），超时则被释放（retired），默认:10分钟
+      pool-name: DateSourceHikariCP     # 连接池名字
+      max-lifetime: 1800000           # 连接的生命时长（毫秒），超时而且没被使用则被释放（retired），默认:30分钟 1800000ms
+      connection-test-query: SELECT 1
+  profiles:
+
+    active: local
+  servlet:
+    multipart:
+      max-file-size: 512000           #设置图片上传限制最大500K
+      max-request-size: 512000        #设置请求最大限制500k
+ #redis 单机
+  #redis:
+  #  database: 1
+  #  host: 192.168.137.100
+  #  port: 6379
+  #  password: foobared
+  redis:
+    database: 1
+    password: foobared
+    sentinel:
+      master: mymaster
+      nodes: 192.168.137.103:26379,192.168.137.104:26379,192.168.137.105:26379
+############################################################
+#
+# mybatis 配置
+#
+############################################################
+mybatis:
+  type-aliases-package: org.cplego.foodie.pojo          # 所有POJO类所在包路径
+  mapper-locations: classpath:mapper/*.xml      # mapper映射文件
+  configuration:
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+############################################################
+#
+# mybatis mapper 配置
+#
+############################################################
+#通用 Mapper 配置
+mapper:
+  mappers: org.cplego.foodie.my.mapper.MyMapper
+  not-empty: false
+  identity: MYSQL
+# 3.内置tomcat
+
+############################################################
+#
+# web访问端口号  约定：8088
+#
+############################################################
+server:
+  port: 8088
+  tomcat:
+    uri-encoding: UTF-8
+  max-http-header-size: 80KB
+
+

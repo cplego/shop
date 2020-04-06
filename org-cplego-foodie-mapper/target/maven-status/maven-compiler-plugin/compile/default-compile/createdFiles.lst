@@ -1,0 +1,16 @@
+org\cplego\foodie\mapper\ItemsCommentsMapper.class
+org\cplego\foodie\mapper\StuMapper.class
+org\cplego\foodie\mapper\ItemsMapperCustom.class
+org\cplego\foodie\mapper\ItemsMapper.class
+org\cplego\foodie\mapper\ItemsSpecMapper.class
+org\cplego\foodie\mapper\OrderStatusMapper.class
+org\cplego\foodie\mapper\ItemsParamMapper.class
+org\cplego\foodie\mapper\CarouselMapper.class
+org\cplego\foodie\mapper\UsersMapper.class
+org\cplego\foodie\mapper\OrderItemsMapper.class
+org\cplego\foodie\mapper\OrdersMapper.class
+org\cplego\foodie\mapper\ItemsImgMapper.class
+org\cplego\foodie\mapper\CategoryMapper.class
+org\cplego\foodie\mapper\UserAddressMapper.class
+org\cplego\foodie\mapper\CategoryMapperCustom.class
+org\cplego\foodie\my\mapper\MyMapper.class

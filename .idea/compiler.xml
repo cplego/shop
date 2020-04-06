@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="org-cplego-foodie-api" />
+        <module name="org-cplego-foodie-common" />
+        <module name="org-cplego-foodie-mapper" />
+        <module name="org-cplego-foodie-pojo" />
+        <module name="org-cplego-foodie-service" />
+      </profile>
+    </annotationProcessing>
+  </component>
+  <component name="JavacSettings">
+    <option name="ADDITIONAL_OPTIONS_OVERRIDE">
+      <module name="org-cplego-foodie" options="-parameters" />
+      <module name="org-cplego-foodie-api" options="-parameters" />
+      <module name="org-cplego-foodie-common" options="-parameters" />
+      <module name="org-cplego-foodie-mapper" options="-parameters" />
+      <module name="org-cplego-foodie-pojo" options="-parameters" />
+      <module name="org-cplego-foodie-service" options="-parameters" />
+    </option>
+  </component>
+</project>

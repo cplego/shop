@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="org.cplego.foodie.mapper.ItemsMapperCustom" >
+
+  <resultMap id="itemsCommentsResultMap" type="org.cplego.foodie.pojo.vo.ItemsCommentsVO">
+    <id column="nickname" property="nickname"/>
+    <result column="userFace" property="userFace"/>
+    <result column="commentLevel" property="commentLevel"/>
+    <result column="content" property="content"/>
+    <result column="createdTime" property="createdTime"/>
+    <result column="specName" property="specName"/>
+  </resultMap>
+  <!--查询商品评论-->
+  <select id="queryItemsComments" resultMap="itemsCommentsResultMap" parameterType="Map">
+    SELECT
+    u.nickname AS nickname,
+    u.face AS userFace,
+    ic.comment_level AS commentLevel,
+    ic.content as content,
+    ic.created_time AS createdTime,
+    ic.sepc_name AS specName
+    FROM
+    users u
+    LEFT JOIN
+    items_comments ic
+    ON
+    u.id = ic.user_id
+    WHERE
+    ic.item_id= #{paramsMap.itemId}
+    <if test="paramsMap.level != null and paramsMap.level != ''">
+      AND
+      ic.comment_level = #{paramsMap.level}
+    </if>
+  </select>
+
+  <!-- 商品搜索 前端从搜索框触发-->
+<select id="serachItems" resultType="org.cplego.foodie.pojo.vo.ItemsSerachVO" parameterType="Map">
+    SELECT
+    i.id as itemId,
+    i.item_name as itemName,
+    i.sell_counts as sellCounts,
+    im.url as imgUrl,
+    tmpSpec.price_discount as price
+    FROM
+    items i
+    LEFT JOIN
+    items_img im
+    ON
+    i.id = im.item_id
+    LEFT JOIN
+    (SELECT item_id,MIN(price_discount) as price_discount from items_spec GROUP BY item_id) tmpSpec
+    ON
+    i.id = tmpSpec.item_id
+    where im.is_main = 1
+    <if test="paramsMap.keywords != null and paramsMap.keywords != '' ">
+        and i.item_name like '%${paramsMap.keywords}%'
+    </if>
+    <choose>
+        <when test="paramsMap.sort == &quot;k&quot;">
+            order by i.item_name ASC
+        </when>
+        <when test="paramsMap.sort == &quot;c&quot;">
+            order by i.sell_counts ASC
+        </when>
+        <when test="paramsMap.sort == &quot;p&quot;">
+            order by tmpSpec.price_discount ASC
+        </when>
+    </choose>
+    <!-- k 默认名称排序
+         p 按价格排序
+         s 按销量排序  -->
+</select>
+    <!-- 商品搜索 前端从商品三级分类id触发-->
+    <select id="serachCatItems" resultType="org.cplego.foodie.pojo.vo.ItemsSerachVO" parameterType="Map">
+        SELECT
+        i.id as itemId,
+        i.item_name as itemName,
+        i.sell_counts as sellCounts,
+        im.url as imgUrl,
+        tmpSpec.price_discount as price
+        FROM
+        items i
+        LEFT JOIN
+        items_img im
+        ON
+        i.id = im.item_id
+        LEFT JOIN
+        (SELECT item_id,MIN(price_discount) as price_discount from items_spec GROUP BY item_id) tmpSpec
+        ON
+        i.id = tmpSpec.item_id
+        where im.is_main = 1
+        and i.cat_id = #{paramsMap.catId}
+        <choose>
+            <when test="paramsMap.sort == &quot;k&quot;">
+                order by i.item_name ASC
+            </when>
+            <when test="paramsMap.sort == &quot;c&quot;">
+                order by i.sell_counts ASC
+            </when>
+            <when test="paramsMap.sort == &quot;p&quot;">
+                order by tmpSpec.price_discount ASC
+            </when>
+        </choose>
+        <!-- k 默认名称排序
+             p 按价格排序
+             s 按销量排序  -->
+    </select>
+    <!-- 刷新购物车中的商品数据 -->
+    <select id="refreshShopcart" parameterType="List" resultType="org.cplego.foodie.pojo.vo.ShopcartVO">
+            SELECT
+            i.id as itemId,
+            i.item_name as itemName,
+            iimg.url as itemImgUrl,
+            ispec.id as specId,
+            ispec.`name` as specName,
+            ispec.price_discount as priceDiscount,
+            ispec.price_normal as priceNormal
+            FROM
+            items i
+            LEFT JOIN
+            items_img iimg
+            ON
+            i.id = iimg.item_id
+            LEFT JOIN
+            items_spec ispec
+            ON
+            i.id = ispec.item_id
+            WHERE
+                iimg.is_main = '1'
+                AND
+                ispec.id
+            IN
+              <foreach collection="paramsList" index="" item="ispecId" open="(" close=")" separator=",">
+                  #{ispecId}
+              </foreach>
+    </select>
+
+    <update id="descItemsSpecStock">
+        UPDATE
+        items_spec
+        SET
+        stock = stock - #{buyCount}
+        WHERE
+        id = #{itemSpecId}
+        AND
+        stock  >= #{buyCount}
+    </update>
+    
+</mapper>
